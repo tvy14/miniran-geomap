@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini-RAN Geo Planner — Base Station Deployment Simulator</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="stack.css" />
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">📡</div>
+      <div>
+        <h1>Mini-RAN Geo Planner</h1>
+        <p class="subtitle">5G NR · Coverage &amp; Capacity Simulator</p>
+      </div>
+    </div>
+
+    <div class="controls-section" id="stack-panel">
+      <h3>Software RIC / dApp control</h3>
+      <p id="stack-status" role="status">Standalone planner — backend disconnected</p>
+      <p id="stack-boundary" class="stack-note">Digital-twin control, not OCUDU or a 5G core. E2 is in-process; E3 is a JSON/UDS harness. No RF hardware or NAS/PDU session.</p>
+      <div class="btn-group">
+        <button id="stack-connect">Connect RIC</button>
+        <button id="stack-edit" disabled>Edit topology</button>
+        <button id="stack-publish">Publish map → RIC</button>
+        <button id="stack-pause" disabled>Resume</button>
+        <button id="stack-step" disabled>Step</button>
+      </div>
+      <p class="stack-note">Serve this page with python -m software_stack --port 8766. Publishing replaces the runtime topology and clears its policies. Profile: 10 MHz / 15 kHz, DL only. Standalone heatmap is hidden while connected.</p>
+      <label class="checkbox-label"><input id="stack-dapp" type="checkbox" disabled /> Scheduler dApp (UDS)</label>
+      <div class="stack-grid">
+        <label>UE<select id="stack-ue" disabled></select></label>
+        <label>Target gNB<select id="stack-target" disabled></select></label>
+        <label>Min PRB %<input id="stack-min" type="number" value="0" min="0" max="100" /></label>
+        <label>Max PRB %<input id="stack-max" type="number" value="100" min="0" max="100" /></label>
+      </div>
+      <div class="btn-group">
+        <button id="stack-quota" disabled>Apply PRB quota</button>
+        <button id="stack-handover" disabled>Handover UE</button>
+      </div>
+      <p id="stack-result" role="status" class="stack-note"></p>
+      <details><summary>Control evidence / capabilities</summary><pre id="stack-evidence">No backend observations yet.</pre></details>
+    </div>
+
+    <div class="controls-section">
+      <h3>🔧 Placement Mode</h3>
+      <div class="btn-group">
+        <button class="mode-btn active" data-mode="bs">Place Base Station</button>
+        <button class="mode-btn" data-mode="ue">Place Mobile (UE)</button>
+        <button class="mode-btn" data-mode="move">Move / Select</button>
+      </div>
+    </div>
+
+    <div class="controls-section">
+      <h3>📊 Link Budget Direction</h3>
+      <div class="btn-group">
+        <button class="dir-btn active" data-dir="dl">DL ↓</button>
+        <button class="dir-btn" data-dir="ul">UL ↑</button>
+      </div>
+      <label class="checkbox-label"><input type="checkbox" id="show-rsrp" /> Show RSRP instead of SINR</label>
+    </div>
+
+    <div class="controls-section">
+      <h3>🗺️ Map &amp; Coverage</h3>
+      <div class="btn-group">
+        <button class="map-btn active" data-map="streets">Street</button>
+        <button class="map-btn" data-map="satellite">Satellite</button>
+        <button class="map-btn" data-map="terrain">Terrain</button>
+      </div>
+      <label class="checkbox-label"><input type="checkbox" id="show-heatmap" checked /> Show Coverage Heatmap</label>
+      <label class="checkbox-label"><input type="checkbox" id="show-cells" checked /> Show Cell Boundaries</label>
+      <label class="checkbox-label"><input type="checkbox" id="show-links" checked /> Show Active Links</label>
+      <label class="checkbox-label"><input type="checkbox" id="auto-refresh" checked /> Auto Refresh</label>
+    </div>
+
+    <div class="controls-section">
+      <h3>📶 Base Station Parameters</h3>
+      <div class="param-grid">
+        <label>Carrier Freq (MHz)<input type="number" id="freq-mhz" value="3500" min="450" max="100000" /></label>
+        <label>Freq Range
+          <select id="freq-range">
+            <option value="fr1">FR1 (450–7125 MHz)</option>
+            <option value="fr1-high">FR1-High (3.3–6 GHz)</option>
+            <option value="fr2">FR2 (24.25–52.6 GHz)</option>
+          </select>
+        </label>
+        <label>SCS (kHz)
+          <select id="scs">
+            <option value="15">15 kHz (μ=0)</option>
+            <option value="30" selected>30 kHz (μ=1)</option>
+            <option value="60">60 kHz (μ=2)</option>
+            <option value="120">120 kHz (μ=3)</option>
+          </select>
+        </label>
+        <label>Bandwidth (MHz)
+          <select id="bandwidth">
+            <option value="10">10 MHz · 24 PRBs</option>
+            <option value="20">20 MHz · 51 PRBs</option>
+            <option value="50">50 MHz · 133 PRBs</option>
+            <option value="100" selected>100 MHz · 273 PRBs</option>
+          </select>
+        </label>
+        <label>Allocated PRBs<input type="number" id="allocated-prbs" value="273" min="1" max="273" /></label>
+        <label>DL Tx Power (dBm)<input type="number" id="tx-power" value="46" min="0" max="60" /></label>
+        <label>Antenna Gain (dBi)<input type="number" id="ant-gain" value="18" min="0" max="30" /></label>
+        <label>Cable Loss (dB)<input type="number" id="cable-loss" value="2" min="0" max="10" step="0.5" /></label>
+        <label>BS Height (m)<input type="number" id="bs-height" value="25" min="1" max="200" /></label>
+        <label>UE Height (m)<input type="number" id="ue-height" value="1.5" min="0" max="50" step="0.5" /></label>
+        <label>UE Noise Fig (dB)<input type="number" id="ue-nf" value="9" min="0" max="20" step="0.5" /></label>
+        <label>BS Noise Fig (dB)<input type="number" id="bs-nf" value="5" min="0" max="20" step="0.5" /></label>
+        <label>UE Tx Power (dBm)<input type="number" id="ue-tx-power" value="23" min="0" max="40" /></label>
+        <label>Scenario
+          <select id="scenario">
+            <option value="uma">Urban Macro (UMa)</option>
+            <option value="umi">Urban Micro (UMi)</option>
+            <option value="rma">Rural Macro (RMa)</option>
+          </select>
+        </label>
+        <label>Propagation
+          <select id="prop-condition">
+            <option value="auto">Auto LOS/NLOS</option>
+            <option value="los">LOS Only</option>
+            <option value="nlos">NLOS Only</option>
+          </select>
+        </label>
+        <label>Antenna Pattern
+          <select id="ant-pattern">
+            <option value="omni">Omni (no pattern)</option>
+            <option value="directional">Directional Sector</option>
+          </select>
+        </label>
+        <label>Azimuth (°)<input type="number" id="azimuth" value="0" min="0" max="360" /></label>
+        <label>Downtilt (°)<input type="number" id="downtilt" value="6" min="0" max="30" /></label>
+        <label>H Beamwidth (°)<input type="number" id="h-bw" value="65" min="10" max="360" /></label>
+        <label>V Beamwidth (°)<input type="number" id="v-bw" value="10" min="1" max="90" /></label>
+      </div>
+    </div>
+
+    <div class="controls-section">
+      <h3>📡 Selected Link Analysis</h3>
+      <div id="link-analysis" class="link-analysis">
+        <p class="placeholder">Click a UE to see link budget details. Click map to place base stations and mobiles.</p>
+      </div>
+    </div>
+
+    <div class="controls-section">
+      <h3>🌐 Terrain Profile</h3>
+      <canvas id="terrain-canvas" width="320" height="120"></canvas>
+      <p id="terrain-info" class="terrain-info">Place BS and UE to see profile.</p>
+    </div>
+
+    <div class="controls-section">
+      <h3>📈 Network KPIs</h3>
+      <div id="kpi-panel" class="kpi-panel">
+        <div class="kpi-row"><span>Total BS</span><strong id="kpi-bs">0</strong></div>
+        <div class="kpi-row"><span>Total UE</span><strong id="kpi-ue">0</strong></div>
+        <div class="kpi-row"><span>Avg RSRP (dBm)</span><strong id="kpi-rsrp">—</strong></div>
+        <div class="kpi-row"><span>Avg SINR (dB)</span><strong id="kpi-sinr">—</strong></div>
+        <div class="kpi-row"><span>Avg Throughput (Mbps)</span><strong id="kpi-tput">—</strong></div>
+        <div class="kpi-row"><span>Coverage (&gt;-110 dBm)</span><strong id="kpi-coverage">—</strong></div>
+      </div>
+    </div>
+
+    <div class="controls-section action-buttons">
+      <button id="btn-reset" class="btn-danger">↺ Reset All</button>
+      <button id="btn-demo" class="btn-secondary">🏙️ Load Demo Topology</button>
+      <button id="btn-add-cluster" class="btn-secondary">📡 Add BS Cluster</button>
+    </div>
+
+    <div class="sidebar-footer">
+      <span>3GPP TR 38.901 · TS 38.104 · TS 38.214</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="channel_models.js"></script>
+<script src="nr_numerology.js"></script>
+<script src="link_budget.js"></script>
+<script src="app.js"></script>
+<script src="stack.js"></script>
+</body>
+</html>

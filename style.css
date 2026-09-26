@@ -1,0 +1,315 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f1117;
+  color: #e0e0e0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#app {
+  display: flex;
+  height: 100vh;
+}
+
+#map {
+  flex: 1;
+  height: 100%;
+  z-index: 1;
+}
+
+#sidebar {
+  width: 380px;
+  height: 100vh;
+  overflow-y: auto;
+  background: #161b22;
+  border-left: 1px solid #30363d;
+  padding: 0;
+  z-index: 10;
+}
+
+#sidebar::-webkit-scrollbar { width: 6px; }
+#sidebar::-webkit-scrollbar-track { background: #161b22; }
+#sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1a2332 0%, #0d1117 100%);
+  border-bottom: 1px solid #30363d;
+}
+
+.logo { font-size: 28px; }
+
+.sidebar-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #58a6ff;
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 2px;
+}
+
+.controls-section {
+  padding: 14px 20px;
+  border-bottom: 1px solid #21262d;
+}
+
+.controls-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.btn-group button {
+  padding: 6px 12px;
+  border: 1px solid #30363d;
+  background: #21262d;
+  color: #c9d1d9;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-group button:hover {
+  background: #30363d;
+  border-color: #8b949e;
+}
+
+.btn-group button.active {
+  background: #1f6feb;
+  border-color: #1f6feb;
+  color: #fff;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #8b949e;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  accent-color: #1f6feb;
+}
+
+.param-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.param-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: #8b949e;
+  gap: 3px;
+}
+
+.param-grid input,
+.param-grid select {
+  padding: 5px 8px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  font-size: 12px;
+  width: 100%;
+}
+
+.param-grid input:focus,
+.param-grid select:focus {
+  outline: none;
+  border-color: #1f6feb;
+  box-shadow: 0 0 0 2px rgba(31,111,235,0.2);
+}
+
+.link-analysis {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 12px;
+  min-height: 80px;
+}
+
+.link-analysis .placeholder {
+  color: #484f58;
+  text-align: center;
+  padding: 10px;
+}
+
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px solid #21262d;
+}
+
+.link-row:last-child { border-bottom: none; }
+.link-row .label { color: #8b949e; }
+.link-row .value { color: #58a6ff; font-weight: 600; font-family: 'SF Mono', Monaco, monospace; }
+.link-row .value.good { color: #3fb950; }
+.link-row .value.warn { color: #d29922; }
+.link-row .value.bad { color: #f85149; }
+
+.terrain-info {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 6px;
+  text-align: center;
+}
+
+#terrain-canvas {
+  width: 100%;
+  height: 120px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+}
+
+.kpi-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: #0d1117;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.kpi-row span { color: #8b949e; }
+.kpi-row strong { color: #58a6ff; font-family: 'SF Mono', Monaco, monospace; }
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-buttons button {
+  padding: 8px 12px;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.btn-danger {
+  background: #da3633;
+  border-color: #da3633;
+  color: #fff;
+}
+.btn-danger:hover { background: #b62324; }
+
+.btn-secondary {
+  background: #21262d;
+  color: #c9d1d9;
+}
+.btn-secondary:hover { background: #30363d; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 10px;
+  color: #484f58;
+  border-top: 1px solid #21262d;
+}
+
+/* Leaflet customizations */
+.leaflet-container { background: #0d1117; }
+.leaflet-control-zoom a { background: #21262d !important; color: #c9d1d9 !important; border-color: #30363d !important; }
+.leaflet-control-zoom a:hover { background: #30363d !important; }
+.leaflet-control-attribution { background: rgba(13,17,23,0.8) !important; color: #484f58 !important; }
+.leaflet-control-attribution a { color: #58a6ff !important; }
+
+/* Custom markers */
+.bs-marker {
+  width: 28px;
+  height: 28px;
+  background: #1f6feb;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ue-marker {
+  width: 18px;
+  height: 18px;
+  background: #3fb950;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+.ue-marker.selected {
+  background: #d29922;
+  width: 22px;
+  height: 22px;
+  box-shadow: 0 0 0 4px rgba(210,153,34,0.3);
+}
+
+/* Coverage heatmap legend */
+.heatmap-legend {
+  background: rgba(13,17,23,0.9);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  font-size: 11px;
+  color: #c9d1d9;
+}
+
+.heatmap-legend .gradient-bar {
+  width: 160px;
+  height: 10px;
+  border-radius: 2px;
+  margin: 4px 0;
+  background: linear-gradient(to right, #f85149, #d29922, #3fb950, #1f6feb);
+}
+
+/* Tooltip */
+.custom-tooltip {
+  background: rgba(13,17,23,0.95);
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #c9d1d9;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.custom-tooltip strong { color: #58a6fe; }
