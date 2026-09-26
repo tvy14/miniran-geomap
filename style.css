@@ -1,16 +1,20 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #0f1117;
   color: #e0e0e0;
   overflow: hidden;
   height: 100vh;
+  height: 100dvh;
 }
 
 #app {
   display: flex;
-  height: 100vh;
+  flex: 1;
+  min-height: 0;
 }
 
 #map {
@@ -21,7 +25,7 @@ body {
 
 #sidebar {
   width: 380px;
-  height: 100vh;
+  height: 100%;
   overflow-y: auto;
   background: #161b22;
   border-left: 1px solid #30363d;
@@ -40,6 +44,50 @@ body {
   padding: 16px 20px;
   background: linear-gradient(135deg, #1a2332 0%, #0d1117 100%);
   border-bottom: 1px solid #30363d;
+}
+
+.feedback-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 8px 16px;
+  background: #1a2332;
+  border-bottom: 1px solid #30363d;
+  font-size: 12px;
+}
+
+.feedback-bar a {
+  padding: 7px 12px;
+  border-radius: 6px;
+  background: #1f6feb;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.feedback-bar a:hover { background: #1158c7; }
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 12px;
+  padding: 8px 16px;
+  border-top: 1px solid #30363d;
+  background: #0d1117;
+  color: #8b949e;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.feedback-bar, .site-footer { flex-shrink: 0; }
+.site-footer a { color: #58a6ff; }
+.feedback-bar a:focus-visible, .site-footer a:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 3px;
 }
 
 .logo { font-size: 28px; }

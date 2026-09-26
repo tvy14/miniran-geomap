@@ -43,6 +43,17 @@ class PublishTests(unittest.TestCase):
                 self.assertIn(ref, publish.ASSETS)
         self.assertNotIn('.ts"', html)
 
+    def test_feedback_and_copyright(self):
+        with urlopen(self.url + "/") as response:
+            html = response.read().decode()
+        self.assertIn('href="https://forms.gle/gEmFXHYJpUHhZM2d9"', html)
+        self.assertLess(html.index('id="feedback-link"'), html.index('id="app"'))
+        self.assertIn('Mozard Corporartions™', html)
+        self.assertIn('© 2026', html)
+        self.assertIn('href="https://tvy14.github.io"', html)
+        self.assertIn('Timothius Victorio Yasin</a>', html)
+        self.assertGreater(html.index('class="site-footer"'), html.index('id="app"'))
+
     def test_private_paths_not_published(self):
         for path in ("/native_stack/", "/native_stack/config/lab-profile.json",
                      "/publish.py", "/.env", "/../index.html",
