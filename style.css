@@ -1,5 +1,10 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Compact live map for the portfolio; the full planner stays unchanged. */
+.embed-preview #sidebar,
+.embed-preview .feedback-bar,
+.embed-preview .site-footer { display: none; }
+
 body {
   display: flex;
   flex-direction: column;

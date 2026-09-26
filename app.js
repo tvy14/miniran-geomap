@@ -11,7 +11,7 @@
     bsList: [],         // [{id, lat, lng, height, marker}]
     ueList: [],         // [{id, lat, lng, height, marker, linkLine, servingBs}]
     selectedUe: null,
-    mode: 'bs',         // 'bs' | 'ue' | 'move'
+    mode: document.documentElement.classList.contains('embed-preview') ? 'move' : 'bs',
     direction: 'dl',    // 'dl' | 'ul'
     mapType: 'streets',
     showHeatmap: true,
@@ -30,6 +30,7 @@
     center: [24.8138, 120.9675], // Hsinchu City, Taiwan
     zoom: 13,
     zoomControl: true,
+    scrollWheelZoom: !document.documentElement.classList.contains('embed-preview'),
   });
 
   const layers = {
