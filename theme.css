@@ -1,0 +1,77 @@
+/* Theme chrome only: propagation heatmap and marker colors retain their meaning. */
+:root {
+  color-scheme: dark;
+  --ui-bg: #101820;
+  --ui-panel: #17212b;
+  --ui-field: #101820;
+  --ui-raised: #22313c;
+  --ui-border: #3e515e;
+  --ui-text: #e5edf1;
+  --ui-muted: #adbdc8;
+  --ui-link: #91c9ff;
+  --ui-green: #b6e4c7;
+  --param-bg: #182f27;
+  --param-field: #10271f;
+  --param-text: #c3ebd2;
+  --param-border: #527c65;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ui-bg: #f3f7f5;
+  --ui-panel: #ffffff;
+  --ui-field: #f4f7f6;
+  --ui-raised: #e7efeb;
+  --ui-border: #bccdc3;
+  --ui-text: #20372c;
+  --ui-muted: #4e6659;
+  --ui-link: #165e9e;
+  --ui-green: #256244;
+  --param-bg: #e7f5eb;
+  --param-field: #f8fffa;
+  --param-text: #214e35;
+  --param-border: #86b79a;
+}
+body { background: var(--ui-bg); color: var(--ui-text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+button, input, select { font-family: inherit; }
+#sidebar { background: var(--ui-panel); border-color: var(--ui-border); }
+#sidebar::-webkit-scrollbar-track { background: var(--ui-panel); }
+#sidebar::-webkit-scrollbar-thumb { background: var(--ui-border); }
+.sidebar-header { background: var(--ui-raised); border-color: var(--ui-border); }
+.sidebar-header h1 { color: var(--ui-green); font-size: 19px; }
+.subtitle, .checkbox-label, .stack-note, .stack-grid label, .terrain-info,
+.link-row .label, .kpi-row span, .sidebar-footer { color: var(--ui-muted); }
+.controls-section, .link-row, .sidebar-footer { border-color: var(--ui-border); }
+.controls-section h3 { color: var(--ui-green); font-size: 13px; letter-spacing: 0.04em; }
+.feedback-bar, .site-footer { background: var(--ui-raised); color: var(--ui-text); border-color: var(--ui-border); }
+.site-footer a, .link-row .value, .kpi-row strong { color: var(--ui-link); }
+.btn-group button, .btn-secondary, #theme-toggle {
+  background: var(--ui-raised); color: var(--ui-text); border: 1px solid var(--ui-border);
+}
+.btn-group button:hover, .btn-secondary:hover, #theme-toggle:hover { background: var(--ui-panel); border-color: var(--ui-green); }
+.btn-group button.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+#theme-toggle { padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--ui-green); outline-offset: 2px; }
+.link-analysis, .kpi-row, #stack-evidence { background: var(--ui-field); color: var(--ui-text); border-color: var(--ui-border); }
+.link-analysis .placeholder { color: var(--ui-muted); }
+.stack-grid input, .stack-grid select { background: var(--ui-field); color: var(--ui-text); border-color: var(--ui-border); }
+/* Pastel green parameter card, with larger labels and tabular numeric values. */
+#parameters-panel { background: var(--param-bg); color: var(--param-text); border-block: 1px solid var(--param-border); }
+#parameters-panel h3 { color: var(--param-text); font-size: 14px; }
+.param-grid { gap: 12px 10px; }
+.param-grid label { color: var(--param-text); font-size: 13px; font-weight: 600; line-height: 1.4; gap: 6px; }
+.param-grid input, .param-grid select {
+  background: var(--param-field); color: var(--param-text); border-color: var(--param-border);
+  border-radius: 6px; padding: 8px; min-height: 38px; font-size: 14px;
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace; font-variant-numeric: tabular-nums;
+}
+.param-grid input:focus, .param-grid select:focus { border-color: var(--ui-green); box-shadow: 0 0 0 2px var(--param-border); }
+.leaflet-control-zoom a { background: var(--ui-panel) !important; color: var(--ui-text) !important; border-color: var(--ui-border) !important; }
+.leaflet-control-zoom a:hover { background: var(--ui-raised) !important; }
+.leaflet-control-attribution { background: var(--ui-panel) !important; color: var(--ui-muted) !important; }
+.leaflet-control-attribution a { color: var(--ui-link) !important; }
+.heatmap-legend, .custom-tooltip { background: var(--ui-panel); color: var(--ui-text); border-color: var(--ui-border); }
+.custom-tooltip strong { color: var(--ui-link); }
+[data-theme="light"] #stack-status { color: #805400; }
+[data-theme="light"] #stack-status[data-state="connected"], [data-theme="light"] .link-row .value.good { color: #24713c; }
+[data-theme="light"] #stack-status[data-state="error"], [data-theme="light"] .link-row .value.bad { color: #b42a24; }
+[data-theme="light"] .link-row .value.warn { color: #805400; }

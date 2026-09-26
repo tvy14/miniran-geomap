@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
       - name: Check JavaScript syntax
         run: |
-          for file in app.js stack.js channel_models.js nr_numerology.js link_budget.js; do
+          for file in app.js stack.js channel_models.js nr_numerology.js link_budget.js theme.js; do
             node --check "$file"
           done
       - name: Test HTTP delivery and isolation

@@ -13,6 +13,7 @@ DIST = ROOT / "dist"
 ASSETS = (
     "index.html", "style.css", "stack.css", "channel_models.js",
     "nr_numerology.js", "link_budget.js", "app.js", "stack.js",
+    "theme.js", "theme.css",
 )
 
 

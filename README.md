@@ -40,7 +40,7 @@ To build only (for another static host):
 
     python3 publish.py build
 
-Publish only the eight listed web assets in `dist/`, never the whole geomap
+Publish only the allowlisted web assets in `dist/`, never the whole geomap
 folder: `native_stack/` contains native builds, configuration, and logs.
 The bundled server rejects unlisted paths, directory listings, and symlink
 assets. It is a small demo server, not a hardened high-traffic web server.
@@ -60,3 +60,17 @@ control backend through a public tunnel.
 Verification:
 
     python3 -m unittest test_publish.py
+
+## Appearance
+
+The header's Light/Dark mode button switches the interface palette. The first
+visit follows the system preference; an explicit choice is saved locally when
+browser storage is available. Parameter controls use a pastel-green palette,
+larger labels, and tabular monospace values. Map tiles and radio coverage colors
+are not recolored, so their scientific meaning stays unchanged.
+
+Optional browser regression (requires Playwright and installed Google Chrome):
+
+    python3 test_theme_browser.py
+
+Pass the public site URL as an argument to verify the deployed version instead.
